@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Stephanie Waite</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+  <header>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="cv.html">CV</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Contact</h1>
+
+    <div class="contact-card">
+
+      <p class="contact-intro">
+        If you'd like to get in touch, please use the form below.
+      </p>
+
+      <form id="contactForm">
+
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+
+        <button type="submit" class="send-btn">Send</button>
+
+      </form>
+
+      <!-- Clean, user-friendly status message -->
+      <p id="form-status" style="font-weight: bold; margin-top: 10px;"></p>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Stephanie Waite</p>
+  </footer>
+
+  <!-- FINAL production JavaScript -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("contactForm");
+    const statusMessage = document.getElementById("form-status");
+
+    // Always send to the real Worker route
+    const endpoint = "https://stephaniewaite.com/api/contact";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      statusMessage.textContent = "Sending...";
+      statusMessage.style.color = "black";
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          statusMessage.textContent = "Your message has been sent!";
+          statusMessage.style.color = "green";
+          form.reset();
+        } else {
+          statusMessage.textContent = "There was an error sending your message.";
+          statusMessage.style.color = "red";
+        }
+
+      } catch (err) {
+        statusMessage.textContent = "There was an error sending your message.";
+        statusMessage.style.color = "red";
+      }
+    });
+  });
+  </script>
+
+</body>
+</html>
